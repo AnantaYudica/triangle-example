@@ -11,10 +11,12 @@ class Graphics
 {
 public:
     Graphics() = default;
+public:
     virtual ~Graphics() = default;
 public:
     virtual bool InitDraw(Vertex * vertices, int size) = 0;
     virtual bool Draw() = 0;
+    virtual void Cleanup() = 0;
 };
 
 } //!intf
