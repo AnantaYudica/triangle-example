@@ -2,7 +2,6 @@
 #define GRAPHICS_DIRECT3D_H_
 
 #include "../intf/Graphics.h"
-#include "../Vertex.h"
 
 #include <d3d11.h>
 #include <dxgi.h>
@@ -30,10 +29,11 @@ public:
     ~Direct3d();
 public:
     bool Init(HWND hwnd);
-    bool InitDraw(Vertex * vertices, int size);
     bool Draw();
-    bool Render();
     void Cleanup();
+public:
+    ID3D11Device * Device();
+    ID3D11DeviceContext * DeviceContext();
 };
 
 } //!graphics

@@ -6,11 +6,20 @@ using namespace Microsoft::WRL;
 
 Direct3d Direct3d::ms_instance;
 
-Direct3d::Direct3d()
+Direct3d::Direct3d() :
+    m_device(nullptr),
+    m_deviceContext(nullptr),
+    m_dxgiSwapChain(nullptr),
+    m_renderTargetView(nullptr)
 {}
 
 Direct3d::~Direct3d()
-{}
+{
+    if (m_device) m_device->Release();
+    if (m_deviceContext) m_deviceContext->Release();
+    if (m_dxgiSwapChain) m_dxgiSwapChain->Release();
+    if (m_renderTargetView) m_renderTargetView->Release();
+}
 
 Direct3d & Direct3d::GetInstance()
 {
@@ -73,10 +82,12 @@ bool Direct3d::Init(HWND hwnd)
 
     device->CreateRenderTargetView(backbuffer.Get(), NULL, &m_renderTargetView);
 
+    backbuffer->Release();
+
     return true;
 }
 
-bool Direct3d::Render()
+bool Direct3d::Draw()
 {
     m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 
@@ -87,17 +98,17 @@ bool Direct3d::Render()
     return true;
 }
 
-bool Direct3d::InitDraw(Vertex * vertices, int size) 
-{
-    return false;
-}
-
-bool Direct3d::Draw()
-{
-    return false;
-}
-
 void Direct3d::Cleanup()
 {
     
+}
+
+ID3D11Device * Direct3d::Device()
+{
+    return m_device;
+}
+
+ID3D11DeviceContext * Direct3d::DeviceContext()
+{
+    return m_deviceContext;
 }
