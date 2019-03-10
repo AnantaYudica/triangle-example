@@ -1,9 +1,6 @@
 #ifndef INTF_GRAPHICS_H_
 #define INTF_GRAPHICS_H_
 
-#include "Vertex.h"
-
-
 namespace intf
 {
 
@@ -14,7 +11,6 @@ public:
 public:
     virtual ~Graphics() = default;
 public:
-    virtual bool InitDraw(Vertex * vertices, int size) = 0;
     virtual bool Draw() = 0;
     virtual void Cleanup() = 0;
 };
