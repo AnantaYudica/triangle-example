@@ -1,5 +1,6 @@
 #include "Triangle.h"
 
+using namespace obj;
 
 Triangle::Triangle(intf::Graphics * graphics) :
         m_graphics(graphics),
@@ -38,6 +39,6 @@ bool Triangle::Init()
     m_vertices[2].Color.Blue = 1.0f;
     m_vertices[2].Color.Alpha = 1.0f;
     
-    return m_graphics->InitDraw(m_vertices, m_vertices_size);
+    return false;
 }
 

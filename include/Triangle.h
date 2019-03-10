@@ -2,13 +2,13 @@
 #define TRIANGLE_H_
 
 #include "intf/Graphics.h"
-#include "Vertex.h"
+#include "obj/Vertex.h"
 
-class Triangle
+class Triangle 
 {
 private:
     intf::Graphics * m_graphics;
-    Vertex * m_vertices;
+    obj::Vertex * m_vertices;
     int m_vertices_size;
 public:
     Triangle(intf::Graphics * graphics);
