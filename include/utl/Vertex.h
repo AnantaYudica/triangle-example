@@ -1,17 +1,17 @@
-#ifndef OBJ_VERTEX_H_
-#define OBJ_VERTEX_H_
+#ifndef UTL_VERTEX_H_
+#define UTL_VERTEX_H_
 
 #include "Color.h"
 
-namespace obj
+namespace utl
 {
 
 struct Vertex
 {
     float X, Y, Z;
-    obj::Color Color;
+    utl::Color Color;
 };
 
-} //!obj
+} //!utl
 
-#endif //!OBJ_VERTEX_H_
+#endif //!UTL_VERTEX_H_

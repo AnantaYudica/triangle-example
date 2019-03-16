@@ -1,7 +1,7 @@
-#ifndef OBJ_COLOR_H_
-#define OBJ_COLOR_H_
+#ifndef UTL_COLOR_H_
+#define UTL_COLOR_H_
 
-namespace obj
+namespace utl
 {
 
 struct Color
@@ -9,6 +9,6 @@ struct Color
     float Red, Green, Blue, Alpha;
 };
 
-} //!obj
+} //!utl
 
-#endif //!OBJ_COLOR_H_
+#endif //!UTL_COLOR_H_
