@@ -33,3 +33,4 @@
 
 # Folder Generate Project Win
 .build_win
+.vscode
