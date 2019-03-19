@@ -1,4 +1,7 @@
 #include "graphics/Direct3d.h"
+#include "graphics/direct3d/shader/Pixel.h"
+#include "graphics/direct3d/shader/Vertex.h"
+#include "graphics/direct3d/vertex/Buffer.h"
 
 using namespace std;
 using namespace graphics;
@@ -15,15 +18,17 @@ Direct3d::Direct3d() :
 
 Direct3d::~Direct3d()
 {
-    if (m_device) m_device->Release();
-    if (m_deviceContext) m_deviceContext->Release();
-    if (m_dxgiSwapChain) m_dxgiSwapChain->Release();
-    if (m_renderTargetView) m_renderTargetView->Release();
+    Cleanup();
 }
 
 Direct3d & Direct3d::GetInstance()
 {
     return ms_instance;
+}
+
+typename Direct3d::CategoryType Direct3d::Category()
+{
+    return CategoryType::direct3d;
 }
 
 bool Direct3d::Init(HWND hwnd)
@@ -32,7 +37,7 @@ bool Direct3d::Init(HWND hwnd)
         NULL,
         D3D_DRIVER_TYPE_HARDWARE,
         NULL,
-        NULL,
+        D3D11_CREATE_DEVICE_DEBUG,
         NULL,
         NULL,
         D3D11_SDK_VERSION,
@@ -82,25 +87,79 @@ bool Direct3d::Init(HWND hwnd)
 
     device->CreateRenderTargetView(backbuffer.Get(), NULL, &m_renderTargetView);
 
-    backbuffer->Release();
+    RECT rect;
+    if (!GetWindowRect(hwnd, &rect)) return false;
+
+    D3D11_VIEWPORT view_port;
+
+    view_port.TopLeftX = 0;
+    view_port.TopLeftY = 0;
+    view_port.Width = (float)(rect.right - rect.left);
+    view_port.Height = (float)(rect.bottom - rect.top);
+    view_port.MaxDepth = NULL;
+    view_port.MinDepth = NULL;
+
+    m_deviceContext->RSSetViewports(1, &view_port);
 
     return true;
 }
 
-bool Direct3d::Draw()
+bool Direct3d::BeginDraw()
 {
     m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 
     float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
     m_deviceContext->ClearRenderTargetView(m_renderTargetView, color);
 
+    return true;
+}
+
+bool Direct3d::EndDraw()
+{
     m_dxgiSwapChain->Present(1, 0);
     return true;
 }
 
 void Direct3d::Cleanup()
 {
-    
+    if (m_device)
+    {   
+        m_device->Release();
+        m_device = nullptr;
+    }
+    if (m_deviceContext) 
+    {
+        m_deviceContext->Release();
+        m_deviceContext = nullptr;
+    }
+    if (m_dxgiSwapChain) 
+    {
+        m_dxgiSwapChain->Release();
+        m_dxgiSwapChain = nullptr;
+    }
+    if (m_renderTargetView) 
+    {
+        m_renderTargetView->Release();
+        m_renderTargetView = nullptr;
+    }
+}
+
+typename Direct3d::ShaderInterfacePointerType 
+Direct3d::MakeShader(const ShaderCategoryType & categ)
+{
+    if (categ == ShaderCategoryType::vertex)
+        return ShaderInterfacePointerType(new direct3d::shader::Vertex());
+    else if (categ == ShaderCategoryType::pixel)
+        return ShaderInterfacePointerType(new direct3d::shader::Pixel());
+    else if (categ == ShaderCategoryType::fragment)
+        return ShaderInterfacePointerType(new direct3d::shader::Pixel());
+    return ShaderInterfacePointerType(nullptr);
+}
+
+typename Direct3d::VertexInterfacePointerType 
+Direct3d::MakeVertex()
+{
+    return VertexInterfacePointerType(new direct3d::vertex::Buffer());
 }
 
 ID3D11Device * Direct3d::Device()
@@ -111,4 +170,9 @@ ID3D11Device * Direct3d::Device()
 ID3D11DeviceContext * Direct3d::DeviceContext()
 {
     return m_deviceContext;
+}
+
+IDXGISwapChain1 * Direct3d::SwapChain()
+{
+    return m_dxgiSwapChain;
 }
