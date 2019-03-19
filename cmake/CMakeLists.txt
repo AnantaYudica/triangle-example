@@ -20,4 +20,4 @@ add_library("triangle"
 
 add_executable("Main" WIN32 ${PROJECT_SOURCE_DIR}/../win/main.cpp)
 
-target_link_libraries("Main" "triangle" d3d11)
+target_link_libraries("Main" "triangle" d3d11 d3dcompiler Opengl32)
