@@ -4,6 +4,7 @@
 #include "../../defn/categ/Shader.h"
 
 #include <string>
+#include <memory>
 
 namespace intf
 {
@@ -13,16 +14,25 @@ namespace graphics
 class Shader
 {
 public:
+    typedef std::shared_ptr<Shader> PointerType;
+    typedef defn::categ::Shader CategoryType;
+private:
+    CategoryType m_category;
+public:
     Shader();
+    Shader(const CategoryType categ);
 public:
     virtual ~Shader() = default;
 public:
-    virtual bool Attach();
+    CategoryType Category() const;
 public:
-    virtual bool CompileString(defn::categ::Shader categ, 
-        std::string str) = 0;
+    virtual bool Attach() = 0;
 public:
-    virtual operator bool() = 0;
+    virtual bool CompileString(std::string str) = 0;
+public:
+    virtual void Cleanup() = 0;
+public:
+    virtual operator bool() const = 0;
 };
 
 } //!graphics
