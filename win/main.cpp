@@ -1,5 +1,10 @@
 #include <windows.h>
 #include "graphics/Direct3d.h"
+#include "Triangle.h"
+
+#include <memory>
+
+std::shared_ptr<Triangle> triangle{ nullptr };
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -37,6 +42,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     graphics::Direct3d::GetInstance().Init(hwnd);
 
+    triangle = std::make_shared<Triangle>(&graphics::Direct3d::GetInstance());
+    triangle->Init();
+
     ShowWindow(hwnd, nCmdShow);
     
     MSG msg{};
@@ -44,6 +52,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
+        graphics::Direct3d::GetInstance().BeginDraw();
+        triangle->Draw();
+        graphics::Direct3d::GetInstance().EndDraw();
     }
 
     return (int)msg.wParam;
@@ -54,6 +65,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         case WM_DESTROY:
             PostQuitMessage(0);
+            if (triangle) triangle.reset();
             return 0;
 
         case WM_PAINT:
@@ -62,7 +74,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             HDC hdc = BeginPaint(hwnd, &ps);
             FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
             EndPaint(hwnd, &ps);
-            graphics::Direct3d::GetInstance().Draw();
         }
         return 0;
     }
