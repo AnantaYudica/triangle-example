@@ -62,8 +62,18 @@ elseif(3D_GRAPHICS_API_LOWER STREQUAL "opengl")
 
 add_subdirectory(third_party/Microsoft/angle)
 
+include_directories (${PROJECT_SOURCE_DIR}/../third_party/Microsoft/angle/include)
+
 add_definitions(-DUSING_OPENGL)
-target_link_libraries("Main" "triangle" opengl32)
+
+target_compile_definitions(triangle PUBLIC
+    -DLIBANGLE_IMPLEMENTATION
+    -DGL_GLEXT_PROTOTYPES
+    -DGL_APICALL=
+    -DEGLAPI=)
+
+target_link_libraries("triangle")
+target_link_libraries("Main" triangle libEGL d3d11 d3dcompiler)
 
 endif()
 
