@@ -28,6 +28,7 @@ file(GLOB_RECURSE ANGLE_COMMON_HEADER_FILES
     "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/src/common/*.h")
 
 file(GLOB_RECURSE ANGLE_COMMON_SOURCE_FILES 
+    "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/src/common/*.cc"
     "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/src/common/*.cpp")
 
 filterFilenameList("${ANGLE_COMMON_SOURCE_FILES}" 
@@ -37,12 +38,20 @@ filterFilenameList("${ANGLE_COMMON_SOURCE_FILES}"
 add_library("angle-common" STATIC ${FILTER_ANGLE_COMMON_SOURCE_FILES}
     ${ANGLE_COMMON_HEADER_FILES})
 
+file(GLOB_RECURSE ANGLE_IMAGE_UTIL_HEADER_FILES 
+    "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/src/image_util/*.h")
+
+file(GLOB_RECURSE ANGLE_IMAGE_UTIL_SOURCE_FILES 
+    "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/src/image_util/*.cpp") 
+
+add_library("angle-image_util" STATIC ${ANGLE_IMAGE_UTIL_HEADER_FILES}
+    ${ANGLE_IMAGE_UTIL_SOURCE_FILES})
+
 file(GLOB_RECURSE ANGLE_COMPILER_PREPROCESSOR_HEADER_FILES 
 "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/src/compiler/preprocessor/*.h")
 
 file(GLOB_RECURSE ANGLE_COMPILER_PREPROCESSOR_SOURCE_FILES 
     "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/src/compiler/preprocessor/*.cpp")
-
 
 add_library("angle-compiler-preprocessor" STATIC 
     ${ANGLE_COMPILER_PREPROCESSOR_HEADER_FILES}
@@ -57,6 +66,24 @@ file(GLOB_RECURSE ANGLE_COMPILER_TRANSLATOR_SOURCE_FILES
 add_library("angle-compiler-translator" STATIC 
     ${ANGLE_COMPILER_TRANSLATOR_HEADER_FILES}
     ${ANGLE_COMPILER_TRANSLATOR_SOURCE_FILES})
+
+file(GLOB_RECURSE SYSTEMINFO_HEADER_FILES 
+    "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/src/third_party/systeminfo/*.h")
+
+file(GLOB_RECURSE SYSTEMINFO_SOURCE_FILES 
+    "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/src/third_party/systeminfo/*.cpp")
+
+add_library("systeminfo" STATIC ${SYSTEMINFO_HEADER_FILES}
+    ${SYSTEMINFO_SOURCE_FILES})
+    
+file(GLOB_RECURSE COMPILER_HEADER_FILES 
+    "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/src/third_party/compiler/*.h")
+
+file(GLOB_RECURSE COMPILER_SOURCE_FILES 
+    "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/src/third_party/compiler/*.cpp")
+
+add_library("compiler" STATIC ${COMPILER_HEADER_FILES}
+    ${COMPILER_SOURCE_FILES})
 
 file(GLOB_RECURSE ANGLE_INCLUDE_FILES 
     "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/include/*.h")
@@ -95,8 +122,11 @@ add_library("libAngle" STATIC ${ANGLE_INCLUDE_FILES}
 
 add_dependencies("libAngle" "gen-commit_id")
 target_link_libraries("libAngle" "angle-common" 
+    "angle-image_util"
     "angle-compiler-preprocessor"
-    "angle-compiler-translator")
+    "angle-compiler-translator"
+    "systeminfo"
+    "compiler")
 
 file(GLOB_RECURSE GLESv2_SOURCE_FILES 
     "${THIRD_PARTY_MICROSOFT_ANGLE_DIR}/src/libGLESv2/*.h"
