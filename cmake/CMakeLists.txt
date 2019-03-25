@@ -73,7 +73,7 @@ target_compile_definitions(triangle PUBLIC
     -DEGLAPI=)
 
 target_link_libraries("triangle")
-target_link_libraries("Main" triangle libEGL d3d11 d3dcompiler)
+target_link_libraries("Main" triangle libEGL d3d9 d3d11 d3dcompiler dxguid)
 
 endif()
 
